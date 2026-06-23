@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aiko Print Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:    #3a8a8c;
+      --teal-dark: #2a6e70;
+      --teal-light: #5bb3b5;
+      --ink:     #111111;
+      --white:   #ffffff;
+      --purple:  #7b4fcf;
+      --sand:    #f5f0e8;
+      --radius:  12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ink);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(17,17,17,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(58,138,140,0.3);
+    }
+    .nav-logo {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: 1.25rem;
+      color: var(--teal-light);
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal-light); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(58,138,140,0.35) 0%, transparent 70%),
+        var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ink splatter decorations */
+    .hero::before, .hero::after {
+      content: '★';
+      position: absolute;
+      font-size: 4rem;
+      color: var(--purple);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .hero::before { top: 15%; left: 8%; transform: rotate(-20deg); font-size: 5rem; }
+    .hero::after  { bottom: 20%; right: 8%; transform: rotate(15deg); font-size: 3rem; }
+
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--teal-light);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+    .hero h1 span { color: var(--teal-light); }
+    .hero-sub {
+      margin-top: 1.25rem;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-outline { border: 2px solid var(--teal); color: var(--teal-light); background: transparent; }
+
+    .est-badge {
+      margin-top: 3rem;
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border: 1px solid rgba(58,138,140,0.4);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.12em;
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: #161616; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .service-card {
+      background: #1f1f1f;
+      border: 1px solid rgba(58,138,140,0.2);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .service-card:hover {
+      border-color: var(--teal);
+      transform: translateY(-3px);
+    }
+    .service-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .service-card h3 {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .service-card p { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--ink); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+    .step { position: relative; padding-left: 1rem; }
+    .step-num {
+      font-family: 'Black Han Sans', sans-serif;
+      font-size: 3.5rem;
+      color: rgba(58,138,140,0.2);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .step p { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+    /* ── PAYMENT ── */
+    #payment { background: #161616; }
+    .payment-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+    .qr-box {
+      background: var(--sand);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      color: var(--ink);
+    }
+    .qr-box .qr-placeholder {
+      width: 160px; height: 160px;
+      margin: 0 auto 1rem;
+      background: #ccc;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      color: #666;
+      font-weight: 600;
+    }
+    .qr-box p { font-size: 0.8rem; color: #555; margin-top: 0.5rem; }
+    .qr-box strong { font-size: 1.1rem; color: var(--ink); display: block; margin-top: 0.5rem; }
+    .payment-text p { color: rgba(255,255,255,0.6); line-height: 1.7; font-size: 0.95rem; }
+    .payment-text ul {
+      list-style: none;
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .payment-text ul li::before { content: '✓ '; color: var(--teal-light); font-weight: 700; }
+    .payment-text ul li { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--ink); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .contact-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(58,138,140,0.2);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .contact-card .c-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 0.5rem;
+    }
+    .contact-card a, .contact-card span {
+      font-size: 0.95rem;
+      color: var(--white);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .contact-card a:hover { color: var(--teal-light); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid rgba(58,138,140,0.15);
+      padding: 2rem;
+      text-align: center;
+    }
+    footer p { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+    footer span { color: var(--teal-light); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 1rem; }
+      .nav-links { gap: 1rem; }
+      .payment-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AIKO PRINT STUDIO</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#payment">Payment</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Davao's Home-Based Print Shop</p>
+  <h1>AIKO<br><span>PRINT</span><br>STUDIO</h1>
+  <p class="hero-sub">Fast, quality printing from the comfort of our home. Documents, photos, xerox, scan — we got you.</p>
+  <div class="hero-cta">
+    <a href="#services" class="btn btn-primary">See Services</a>
+    <a href="#contact" class="btn btn-outline">Send Your File</a>
+  </div>
+  <div class="est-badge">EST. OCTOBER 30, 2024</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <p class="section-label">What We Offer</p>
+    <h2 class="section-title">Services Available Here</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🖨️</div>
+        <h3>Print Documents</h3>
+        <p>Bond paper printing, short & long, black & white or colored.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🖼️</div>
+        <h3>Photo Print</h3>
+        <p>Glossy or matte photo prints, ID photos, passport size and more.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <h3>Xerox / Photocopy</h3>
+        <p>Fast and clear photocopying of documents and IDs.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📡</div>
+        <h3>Scan</h3>
+        <p>Scan your documents and receive them via email or Messenger.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <p class="section-label">Process</p>
+    <h2 class="section-title">How to Order</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Send Your File</h3>
+        <p>Email your file to muadz.ahadain.official@gmail.com or message us on Facebook.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>We Confirm</h3>
+        <p>We'll confirm your order, paper size, and number of copies. We'll give you the total cost.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Pick Up or Pay First</h3>
+        <p>Ring the doorbell when you arrive. Pay via GCash/InstaPay or cash on pickup.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Get Your Prints</h3>
+        <p>Receive your documents, fresh and ready. We also offer scan-to-email service.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment">
+  <div class="container">
+    <p class="section-label">Cashless Payment</p>
+    <h2 class="section-title">Easy Payment Options</h2>
+    <div class="payment-inner">
+      <div class="qr-box">
+        <!-- Replace the placeholder below with your actual QR image -->
+        <div class="qr-placeholder">YOUR QR<br>CODE HERE</div>
+        <strong>MU**Z A.</strong>
+        <p>InstaPay / GCash accepted<br>Transfer fees may apply.</p>
+        <p style="margin-top:0.75rem; font-size:0.75rem; color:#888;">⚠️ Verify amount before sending</p>
+      </div>
+      <div class="payment-text">
+        <p>We accept both cash and cashless payments for your convenience. Just scan the QR code using any banking app or GCash.</p>
+        <ul>
+          <li>GCash</li>
+          <li>InstaPay (any bank)</li>
+          <li>Cash on pickup</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label">Get In Touch</p>
+    <h2 class="section-title">Contact Us</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="c-label">Email</div>
+        <a href="mailto:muadz.ahadain.official@gmail.com">muadz.ahadain.official@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <div class="c-label">Location</div>
+        <span>Davao City, Philippines<br><small style="color:rgba(255,255,255,0.4)">Ring the doorbell on arrival</small></span>
+      </div>
+      <div class="contact-card">
+        <div class="c-label">Business Hours</div>
+        <span>Mon–Sat: 8AM – 8PM<br><small style="color:rgba(255,255,255,0.4)">Sunday: by appointment</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 <span>Aiko Print Studio</span> · Est. October 30, 2024 · Davao City, Philippines</p>
+</footer>
+
+</body>
+</html>
